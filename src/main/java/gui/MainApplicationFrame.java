@@ -2,17 +2,12 @@ package gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 
 import log.Logger;
 
@@ -24,8 +19,13 @@ import log.Logger;
  */
 public class MainApplicationFrame extends JFrame
 {
+    /**
+     * что-то типо имитации рабочего стола (панелька)
+     */
     private final JDesktopPane desktopPane = new JDesktopPane();
-    
+    /**
+    Создаёт главное окно (в том числе игровое окно и для логов)
+     */
     public MainApplicationFrame() {
         //Make the big window be indented 50 pixels from each edge
         //of the screen.
@@ -44,11 +44,22 @@ public class MainApplicationFrame extends JFrame
         GameWindow gameWindow = new GameWindow();
         gameWindow.setSize(400,  400);
         addWindow(gameWindow);
-
+        //устанавливает меню
         setJMenuBar(generateMenuBar());
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //закрытие окна при крестике???
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                closingProcessing();
+            }
+        });
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
-    
+
+    /**
+     * Создает окно для логов
+     * @return окно для логов
+     */
     protected LogWindow createLogWindow()
     {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
@@ -59,51 +70,74 @@ public class MainApplicationFrame extends JFrame
         Logger.debug("Протокол работает");
         return logWindow;
     }
-    
+
+    /**
+     * добавляет новое окно на панель рабочего стола
+     * @param frame окно, которое надо добавить
+     */
     protected void addWindow(JInternalFrame frame)
     {
         desktopPane.add(frame);
         frame.setVisible(true);
     }
-    
-//    protected JMenuBar createMenuBar() {
-//        JMenuBar menuBar = new JMenuBar();
-// 
-//        //Set up the lone menu.
-//        JMenu menu = new JMenu("Document");
-//        menu.setMnemonic(KeyEvent.VK_D);
-//        menuBar.add(menu);
-// 
-//        //Set up the first menu item.
-//        JMenuItem menuItem = new JMenuItem("New");
-//        menuItem.setMnemonic(KeyEvent.VK_N);
-//        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-//                KeyEvent.VK_N, ActionEvent.ALT_MASK));
-//        menuItem.setActionCommand("new");
-////        menuItem.addActionListener(this);
-//        menu.add(menuItem);
-// 
-//        //Set up the second menu item.
-//        menuItem = new JMenuItem("Quit");
-//        menuItem.setMnemonic(KeyEvent.VK_Q);
-//        menuItem.setAccelerator(KeyStroke.getKeyStroke(
-//                KeyEvent.VK_Q, ActionEvent.ALT_MASK));
-//        menuItem.setActionCommand("quit");
-////        menuItem.addActionListener(this);
-//        menu.add(menuItem);
-// 
-//        return menuBar;
-//    }
-    
+    //было закомментированно (не используется)
+    protected JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+
+        //Set up the lone menu.
+        JMenu menu = new JMenu("Document");
+        menu.setMnemonic(KeyEvent.VK_D);
+        menuBar.add(menu);
+
+        //Set up the first menu item.
+        JMenuItem menuItem = new JMenuItem("New");
+        menuItem.setMnemonic(KeyEvent.VK_N);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_N, ActionEvent.ALT_MASK));
+        menuItem.setActionCommand("new");
+//        menuItem.addActionListener(this);
+        menu.add(menuItem);
+
+        //Set up the second menu item.
+        menuItem = new JMenuItem("Quit");
+        menuItem.setMnemonic(KeyEvent.VK_Q);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_Q, ActionEvent.ALT_MASK));
+        menuItem.setActionCommand("quit");
+//        menuItem.addActionListener(this);
+        menu.add(menuItem);
+
+        return menuBar;
+    }
+    //до сюда
+
+    /**
+     * создаёт меню (полоса сверху)
+     * @return меню
+     */
     private JMenuBar generateMenuBar()
     {
         JMenuBar menuBar = new JMenuBar();
-        
+        JMenu lookAndFeelMenu = createlookAndFeelMenu();
+       JMenu testMenu = createTestMenu();
+        JMenu endMenu = createEndMenu();
+
+        menuBar.add(lookAndFeelMenu);
+        menuBar.add(testMenu);
+        menuBar.add(endMenu);
+        return menuBar;
+    }
+
+    /**
+     * создает подменю режимов отобрадения
+     * @return подменю режимов отобрадения
+     */
+    private JMenu createlookAndFeelMenu(){
         JMenu lookAndFeelMenu = new JMenu("Режим отображения");
         lookAndFeelMenu.setMnemonic(KeyEvent.VK_V);
         lookAndFeelMenu.getAccessibleContext().setAccessibleDescription(
                 "Управление режимом отображения приложения");
-        
+
         {
             JMenuItem systemLookAndFeel = new JMenuItem("Системная схема", KeyEvent.VK_S);
             systemLookAndFeel.addActionListener((event) -> {
@@ -121,12 +155,19 @@ public class MainApplicationFrame extends JFrame
             });
             lookAndFeelMenu.add(crossplatformLookAndFeel);
         }
+        return lookAndFeelMenu;
+    }
 
+    /**
+     * создаёт меню для тестов
+     * @return меню для тестов
+     */
+    private JMenu createTestMenu(){
         JMenu testMenu = new JMenu("Тесты");
         testMenu.setMnemonic(KeyEvent.VK_T);
         testMenu.getAccessibleContext().setAccessibleDescription(
                 "Тестовые команды");
-        
+
         {
             JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
             addLogMessageItem.addActionListener((event) -> {
@@ -134,12 +175,31 @@ public class MainApplicationFrame extends JFrame
             });
             testMenu.add(addLogMessageItem);
         }
-
-        menuBar.add(lookAndFeelMenu);
-        menuBar.add(testMenu);
-        return menuBar;
+        return testMenu;
     }
-    
+
+    /**
+     * создаёт меню для выхода
+     * @return меню для выхода
+     */
+    private JMenu createEndMenu(){
+
+       JMenu endMenu = new JMenu("Выход");
+        {
+            endMenu.setMnemonic(KeyEvent.VK_I);
+            endMenu.getAccessibleContext().setAccessibleDescription(
+                    "Выход из приложения");
+            JMenuItem exitMenuItem = new JMenuItem("Выйти", KeyEvent.VK_X);
+            exitMenuItem.addActionListener((event) -> closingProcessing());
+            endMenu.add(exitMenuItem);
+        }
+        return endMenu;
+    }
+
+    /**
+     * пока не знаю для чего
+     * @param className
+     */
     private void setLookAndFeel(String className)
     {
         try
@@ -151,6 +211,28 @@ public class MainApplicationFrame extends JFrame
             | IllegalAccessException | UnsupportedLookAndFeelException e)
         {
             // just ignore
+        }
+    }
+
+    /**
+     * обрабатывает закрытие окна
+     */
+    private void closingProcessing(){
+        {
+            int result = JOptionPane.showConfirmDialog(
+                    null,
+                    "Вы действительно хотите выйти из приложения?",
+                    "Подтверждение выхода",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (result == JOptionPane.YES_OPTION) {
+                System.exit(0);
+
+            } else {
+                Logger.debug("Пользователь решил не выходить.");
+            }
         }
     }
 }
