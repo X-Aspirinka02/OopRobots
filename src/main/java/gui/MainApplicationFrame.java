@@ -120,7 +120,7 @@ public class MainApplicationFrame extends JFrame
         JMenuBar menuBar = new JMenuBar();
         JMenu lookAndFeelMenu = createlookAndFeelMenu();
        JMenu testMenu = createTestMenu();
-        JMenu endMenu = createEndMenu();
+        JMenuItem endMenu = createEndMenu();
 
         menuBar.add(lookAndFeelMenu);
         menuBar.add(testMenu);
@@ -182,18 +182,13 @@ public class MainApplicationFrame extends JFrame
      * создаёт меню для выхода
      * @return меню для выхода
      */
-    private JMenu createEndMenu(){
+    private JMenuItem createEndMenu(){
 
-       JMenu endMenu = new JMenu("Выход");
-        {
-            endMenu.setMnemonic(KeyEvent.VK_I);
-            endMenu.getAccessibleContext().setAccessibleDescription(
-                    "Выход из приложения");
             JMenuItem exitMenuItem = new JMenuItem("Выйти", KeyEvent.VK_X);
             exitMenuItem.addActionListener((event) -> closingProcessing());
-            endMenu.add(exitMenuItem);
-        }
-        return endMenu;
+
+
+        return exitMenuItem;
     }
 
     /**
