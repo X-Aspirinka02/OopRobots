@@ -10,11 +10,13 @@ import javax.swing.JPanel;
 import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
+import log.Logger;
 
-public class LogWindow extends JInternalFrame implements LogChangeListener
+public class LogWindow extends JInternalFrame implements LogChangeListener, StateRestorable
 {
     private LogWindowSource m_logSource;
     private TextArea m_logContent;
+    private PrefixFilteredMap mapState = new PrefixFilteredMap("log");
 
     public LogWindow(LogWindowSource logSource) 
     {
@@ -28,6 +30,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener
         panel.add(m_logContent, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();
+        Logger.debug("Протокол работает");
         updateLogContent();
     }
 
@@ -46,5 +49,12 @@ public class LogWindow extends JInternalFrame implements LogChangeListener
     public void onLogChanged()
     {
         EventQueue.invokeLater(this::updateLogContent);
+    }
+
+    public void saveState(){
+
+    }
+    public void getState(){
+
     }
 }

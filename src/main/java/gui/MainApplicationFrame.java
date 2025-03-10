@@ -36,10 +36,11 @@ public class MainApplicationFrame extends JFrame {
         setContentPane(desktopPane);
 
 
-        LogWindow logWindow = createLogWindow();
-        addWindow(logWindow);
+        addWindow(new LogWindow(Logger.getDefaultLogSource()));
         //400 400 было
-        addWindow(new GameWindow());
+        GameWindow gameWindow = new GameWindow();
+        addWindow(gameWindow);
+        gameWindow.getState();
         //устанавливает меню
         setJMenuBar(generateMenuBar());
 
@@ -48,25 +49,12 @@ public class MainApplicationFrame extends JFrame {
             @Override
             public void windowClosing(WindowEvent event) {
                 closingProcessing();
+
             }
         });
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     }
 
-    /**
-     * Создает окно для логов
-     *
-     * @return окно для логов
-     */
-    protected LogWindow createLogWindow() {
-        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
-        logWindow.setLocation(10, 10);
-        logWindow.setSize(300, 800);
-        setMinimumSize(logWindow.getSize());
-        logWindow.pack();
-        Logger.debug("Протокол работает");
-        return logWindow;
-    }
 
     /**
      * добавляет новое окно на панель рабочего стола
@@ -227,16 +215,24 @@ public class MainApplicationFrame extends JFrame {
             );
 
             if (result == JOptionPane.YES_OPTION) {
+
+                for (JInternalFrame frame : desktopPane.getAllFrames()) {
+                    if (frame instanceof StateRestorable) {
+                        ((StateRestorable) frame).saveState();
+                    }
+                }
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
                         new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 
-                desktopPane.setVisible(false);
-                dispose();
-                System.exit(0);
 
-            } else {
-                Logger.debug("Пользователь решил не выходить.");
+                    desktopPane.setVisible(false);
+                    dispose();
+                    System.exit(0);
+
+                }
+                else{
+                    Logger.debug("Пользователь решил не выходить.");
+                }
             }
         }
     }
-}
