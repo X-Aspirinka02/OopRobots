@@ -6,21 +6,31 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
  * глобальный словарь для хранения состояния всех окон
  */
 public class StateStore {
-    String filePath = System.getProperty("user.home") + "\\r\\state.properties";
+    private final String filePath = System.getProperty("user.home") + "\\r\\state.properties";
+    private final Properties properties = new Properties();
     /**
      * сохраняет информацию окон в хранилище
      */
-    public void setInfo(AbstractMap<String, String> windowMap) {
-        Properties properties = new Properties();
+    public void setInfo(AbstractMap<String, String> windowMap, String prefix) {
+        if (!Objects.equals(prefix, "")) {
+
+            AbstractMap<String, String> gen = getInfo();
+            for (AbstractMap.Entry<String, String> entry : gen.entrySet()) {
+                if (!Objects.equals(entry.getKey().split("//.")[0], prefix)) {
+                    properties.setProperty(entry.getKey(), entry.getValue());
+                }
+            }
+        }
 
         // Заполняем свойства из карты
-        for (AbstractMap.Entry<String, String> entry: windowMap.entrySet()) {
+        for (AbstractMap.Entry<String, String> entry: windowMap.entrySet()) {//Just create method for single property
             properties.setProperty(entry.getKey(), entry.getValue());
         }
 
@@ -40,7 +50,7 @@ public class StateStore {
 
         isFirstStart();
 
-        Properties properties = new Properties();
+
         AbstractMap<String, String> newWindowMap = new HashMap<>();
 
         // Загружаем свойства из файла
@@ -71,12 +81,17 @@ public class StateStore {
         defaultValues.put("game.x", "100");
         defaultValues.put("game.y", "200");
         defaultValues.put("game.isIcon", "false");
+        defaultValues.put("log.width", "300");
+        defaultValues.put("log.height", "800");
+        defaultValues.put("log.x", "10");
+        defaultValues.put("log.y", "10");
+        defaultValues.put("log.isIcon", "false");
 
         // Проверяем, существует ли файл
         File propertiesFile = new File(filePath);
         if (!propertiesFile.exists()) {
             // Если файл не существует, создаем его и заполняем значениями по умолчанию
-            setInfo(defaultValues);
+            setInfo(defaultValues, "");
         }
     }
     }

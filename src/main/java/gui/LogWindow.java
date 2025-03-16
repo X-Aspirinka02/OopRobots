@@ -3,20 +3,30 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.TextArea;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.beans.PropertyVetoException;
+import java.util.AbstractMap;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
 import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
 import log.Logger;
 
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
+
 public class LogWindow extends JInternalFrame implements LogChangeListener, StateRestorable
 {
     private LogWindowSource m_logSource;
     private TextArea m_logContent;
-    private PrefixFilteredMap mapState = new PrefixFilteredMap("log");
+    private final PrefixFilteredMap mapState = new PrefixFilteredMap("log");
 
     public LogWindow(LogWindowSource logSource) 
     {
@@ -29,6 +39,30 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(m_logContent, BorderLayout.CENTER);
         getContentPane().add(panel);
+        addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameIconified(InternalFrameEvent e) {
+                mapState.updateMapIcon(true);
+            }
+
+            @Override
+            public void internalFrameDeiconified(InternalFrameEvent e) {
+                mapState.updateMapIcon(false);
+            }
+        });
+        // доюавление обработки события изменения размера окна
+        // обновление локальной мапы
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                mapState.updateMapSize(getWidth(), getHeight());
+            }
+            @Override
+            public void componentMoved(ComponentEvent e){
+                mapState.updateMapLocation(getX(), getY());
+            }
+        });
+
         pack();
         Logger.debug("Протокол работает");
         updateLogContent();
@@ -51,10 +85,34 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
         EventQueue.invokeLater(this::updateLogContent);
     }
 
-    public void saveState(){
-
+    /**
+     * сохранить текущее состояние окна
+     */
+    public void saveState() {
+        mapState.addToStore();
     }
-    public void getState(){
+    /**
+     * получить предыдущее состояние окна
+     */
+    public void getState() {
+
+        AbstractMap<String, String> mapStartState = mapState.takeFromStore();
+
+        try {
+            this.setIcon(Boolean.parseBoolean(mapStartState.get("isIcon")));
+        } catch (PropertyVetoException e) {
+            Logger.debug("Не удалось установить IsIcon");
+        }
+
+        // Получаем координаты и размеры из mapStartState
+        int x = Integer.parseInt(mapStartState.get("x"));
+        int y = Integer.parseInt(mapStartState.get("y"));
+        int width = Integer.parseInt(mapStartState.get("width"));
+        int height = Integer.parseInt(mapStartState.get("height"));
+
+        // Устанавливаем размеры и положение окна
+        this.setBounds(x, y, width, height);
+
 
     }
 }

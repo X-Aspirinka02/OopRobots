@@ -35,11 +35,13 @@ public class MainApplicationFrame extends JFrame {
 
         setContentPane(desktopPane);
 
+        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
 
-        addWindow(new LogWindow(Logger.getDefaultLogSource()));
-        //400 400 было
+        addWindow(logWindow);
         GameWindow gameWindow = new GameWindow();
+
         addWindow(gameWindow);
+        logWindow.getState();
         gameWindow.getState();
         //устанавливает меню
         setJMenuBar(generateMenuBar());
