@@ -21,11 +21,16 @@ import log.LogWindowSource;
 import log.Logger;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
-
+/**
+ * окно для логов
+ */
 public class LogWindow extends JInternalFrame implements LogChangeListener, StateRestorable
 {
     private LogWindowSource m_logSource;
     private TextArea m_logContent;
+    /**
+     * мапа для сохранения состояния окна
+     */
     private final PrefixFilteredMap mapState = new PrefixFilteredMap("log");
 
     public LogWindow(LogWindowSource logSource) 
@@ -39,6 +44,8 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(m_logContent, BorderLayout.CENTER);
         getContentPane().add(panel);
+
+        //слушатели для отслежтвания изменения параметров окна
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
             public void internalFrameIconified(InternalFrameEvent e) {
@@ -50,8 +57,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
                 mapState.updateMapIcon(false);
             }
         });
-        // доюавление обработки события изменения размера окна
-        // обновление локальной мапы
+
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -92,7 +98,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
         mapState.addToStore();
     }
     /**
-     * получить предыдущее состояние окна
+     * получить и установить предыдущее состояние окна
      */
     public void getState() {
 
@@ -104,13 +110,13 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
             Logger.debug("Не удалось установить IsIcon");
         }
 
-        // Получаем координаты и размеры из mapStartState
+
         int x = Integer.parseInt(mapStartState.get("x"));
         int y = Integer.parseInt(mapStartState.get("y"));
         int width = Integer.parseInt(mapStartState.get("width"));
         int height = Integer.parseInt(mapStartState.get("height"));
 
-        // Устанавливаем размеры и положение окна
+
         this.setBounds(x, y, width, height);
 
 

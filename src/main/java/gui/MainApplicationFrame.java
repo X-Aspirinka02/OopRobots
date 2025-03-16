@@ -36,13 +36,17 @@ public class MainApplicationFrame extends JFrame {
         setContentPane(desktopPane);
 
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
-
         addWindow(logWindow);
         GameWindow gameWindow = new GameWindow();
-
         addWindow(gameWindow);
-        logWindow.getState();
-        gameWindow.getState();
+
+
+        for (JInternalFrame frame : desktopPane.getAllFrames()) {
+            if (frame instanceof StateRestorable) {
+                ((StateRestorable) frame).getState();
+            }
+        }
+
         //устанавливает меню
         setJMenuBar(generateMenuBar());
 

@@ -17,6 +17,8 @@ public class StateStore {
     private final Properties properties = new Properties();
     /**
      * сохраняет информацию окон в хранилище
+     * @param windowMap состояние окна
+     * @param prefix  префикс,показывающий принадлежность данных к конкретному окну
      */
     public void setInfo(AbstractMap<String, String> windowMap, String prefix) {
         if (!Objects.equals(prefix, "")) {
@@ -29,12 +31,12 @@ public class StateStore {
             }
         }
 
-        // Заполняем свойства из карты
-        for (AbstractMap.Entry<String, String> entry: windowMap.entrySet()) {//Just create method for single property
+
+        for (AbstractMap.Entry<String, String> entry: windowMap.entrySet()) {
             properties.setProperty(entry.getKey(), entry.getValue());
         }
 
-        // Сохраняем свойства в файл
+
         try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
             properties.store(outputStream, "Properties File");
             System.out.println("Данные успешно сохранены в файл: " + filePath);
@@ -45,6 +47,7 @@ public class StateStore {
 
     /**
      * получает информацию окон из хранилища
+     * @return мапа состояний для всех окон
      */
     public AbstractMap<String, String> getInfo() {
 
@@ -53,7 +56,7 @@ public class StateStore {
 
         AbstractMap<String, String> newWindowMap = new HashMap<>();
 
-        // Загружаем свойства из файла
+
         try (FileInputStream inputStream = new FileInputStream(filePath)) {
             properties.load(inputStream);
             for (String key : properties.stringPropertyNames()) {
@@ -67,30 +70,33 @@ public class StateStore {
         return newWindowMap;
     }
 
+    /**
+     * заполнение дефолтными состояниями, если это 1 запуск
+     */
     private void isFirstStart(){
-        // Создаем директорию, если она не существует
+
         File directory = new File(System.getProperty("user.home") + "\\r");
         if (!directory.exists()) {
-            directory.mkdirs(); // Создает директорию и все необходимые родительские директории
+            directory.mkdirs();
         }
 
-        // Создаем карту с значениями по умолчанию
+
         AbstractMap<String, String> defaultValues = new HashMap<>();
-        defaultValues.put("game.width", "400");
-        defaultValues.put("game.height", "400");
-        defaultValues.put("game.x", "100");
-        defaultValues.put("game.y", "200");
+        defaultValues.put("game.width", "860");
+        defaultValues.put("game.height", "554");
+        defaultValues.put("game.x", "432");
+        defaultValues.put("game.y", "130");
         defaultValues.put("game.isIcon", "false");
-        defaultValues.put("log.width", "300");
-        defaultValues.put("log.height", "800");
+        defaultValues.put("log.width", "206");
+        defaultValues.put("log.height", "452");
         defaultValues.put("log.x", "10");
         defaultValues.put("log.y", "10");
         defaultValues.put("log.isIcon", "false");
 
-        // Проверяем, существует ли файл
+
         File propertiesFile = new File(filePath);
         if (!propertiesFile.exists()) {
-            // Если файл не существует, создаем его и заполняем значениями по умолчанию
+
             setInfo(defaultValues, "");
         }
     }
