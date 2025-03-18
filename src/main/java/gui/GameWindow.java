@@ -5,8 +5,6 @@ import log.Logger;
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.beans.PropertyVetoException;
 import java.util.AbstractMap;
 
@@ -31,7 +29,7 @@ public class GameWindow extends JInternalFrame implements StateRestorable
     {
 
         super("Игровое поле", true, true, true, true);
-        //getState();
+
         m_visualizer = new GameVisualizer();
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(m_visualizer, BorderLayout.CENTER);

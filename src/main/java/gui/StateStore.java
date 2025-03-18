@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
@@ -20,11 +19,11 @@ public class StateStore {
      * @param windowMap состояние окна
      * @param prefix  префикс,показывающий принадлежность данных к конкретному окну
      */
-    public void setInfo(AbstractMap<String, String> windowMap, String prefix) {
+    public void setInfo(HashMap<String, String> windowMap, String prefix) {
         if (!Objects.equals(prefix, "")) {
 
-            AbstractMap<String, String> gen = getInfo();
-            for (AbstractMap.Entry<String, String> entry : gen.entrySet()) {
+            HashMap<String, String> gen = getInfo();
+            for (HashMap.Entry<String, String> entry : gen.entrySet()) {
                 if (!Objects.equals(entry.getKey().split("//.")[0], prefix)) {
                     properties.setProperty(entry.getKey(), entry.getValue());
                 }
@@ -32,13 +31,13 @@ public class StateStore {
         }
 
 
-        for (AbstractMap.Entry<String, String> entry: windowMap.entrySet()) {
+        for (HashMap.Entry<String, String> entry: windowMap.entrySet()) {
             properties.setProperty(entry.getKey(), entry.getValue());
         }
 
 
         try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
-            properties.store(outputStream, "Properties File");
+            properties.store(outputStream, "Properties File State Windows");
             System.out.println("Данные успешно сохранены в файл: " + filePath);
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,12 +48,12 @@ public class StateStore {
      * получает информацию окон из хранилища
      * @return мапа состояний для всех окон
      */
-    public AbstractMap<String, String> getInfo() {
+    public HashMap<String, String> getInfo() {
 
         isFirstStart();
 
 
-        AbstractMap<String, String> newWindowMap = new HashMap<>();
+        HashMap<String, String> newWindowMap = new HashMap<>();
 
 
         try (FileInputStream inputStream = new FileInputStream(filePath)) {
@@ -81,7 +80,7 @@ public class StateStore {
         }
 
 
-        AbstractMap<String, String> defaultValues = new HashMap<>();
+        HashMap<String, String> defaultValues = new HashMap<>();
         defaultValues.put("game.width", "860");
         defaultValues.put("game.height", "554");
         defaultValues.put("game.x", "432");

@@ -5,8 +5,6 @@ import java.awt.EventQueue;
 import java.awt.TextArea;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.beans.PropertyVetoException;
 import java.util.AbstractMap;
 
@@ -70,6 +68,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
         });
 
         pack();
+
         Logger.debug("Протокол работает");
         updateLogContent();
     }

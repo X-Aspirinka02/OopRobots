@@ -1,7 +1,5 @@
 package gui;
 
-
-import java.util.AbstractMap;
 import java.util.HashMap;
 
 /**
@@ -20,7 +18,7 @@ public class PrefixFilteredMap {
     /**
      * локальный словарь для окна
      */
-    private final AbstractMap<String, String> windowMap;
+    private final HashMap<String, String> windowMap;
 
     /**
      * создание
@@ -69,8 +67,8 @@ public class PrefixFilteredMap {
      * добавить состояние окна в хранилище
      */
     public void addToStore() {
-        AbstractMap<String, String> windowMapI = new HashMap<>(windowMap);
-        for (AbstractMap.Entry<String, String> entry: windowMapI.entrySet()) {
+        HashMap<String, String> windowMapI = new HashMap<>(windowMap);
+        for (HashMap.Entry<String, String> entry: windowMapI.entrySet()) {
             String key = prefix + '.' + entry.getKey();
             windowMap.put(key, entry.getValue());
             windowMap.remove(entry.getKey());
@@ -83,9 +81,9 @@ public class PrefixFilteredMap {
      * взять данные состояния из хранилища
      * @return новое состояние окна
      */
-     public AbstractMap<String, String> takeFromStore() {
-            AbstractMap<String, String> windowMapI = storage.getInfo();
-         for (AbstractMap.Entry<String, String> entry: windowMapI.entrySet()) {
+     public HashMap<String, String> takeFromStore() {
+            HashMap<String, String> windowMapI = storage.getInfo();
+         for (HashMap.Entry<String, String> entry: windowMapI.entrySet()) {
              if (entry.getKey().split("\\.")[0].equals(prefix)) {
                  String key = entry.getKey().split("\\.")[1];
                  windowMap.put(key, entry.getValue());
