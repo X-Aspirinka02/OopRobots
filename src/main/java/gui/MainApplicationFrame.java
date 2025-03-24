@@ -22,7 +22,8 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
      * мапа для сохранения состояния
      */
     private final PrefixFilteredMap gen = new PrefixFilteredMap("gen");
-
+   private final GameWindow gameWindow = new GameWindow();
+    private final LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
 
     /**
      * Создаёт главное окно (в том числе игровое окно и для логов)
@@ -37,12 +38,8 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
                 screenSize.height - inset * 2);
 
         setContentPane(desktopPane);
-        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
         addWindow(logWindow);
-        GameWindow gameWindow = new GameWindow();
         addWindow(gameWindow);
-        gameWindow.getProp();
-        logWindow.getProp();
 
 
         //устанавливает меню
@@ -80,7 +77,7 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
             }
         });
         this.pack();
-        getProp();
+        getPropStateRestorables(this, logWindow, gameWindow);
     }
 
 
@@ -142,13 +139,7 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
 
             if (result == JOptionPane.YES_OPTION) {
 
-                for (JInternalFrame frame : desktopPane.getAllFrames()) {
-                    if (frame instanceof StateRestorable) {
-                        ((StateRestorable) frame).saveProp();
-                    }
-
-                }
-                this.saveProp();
+               setPropStateRestorables(this, gameWindow, logWindow);
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
                         new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 
@@ -189,5 +180,15 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
 
         this.setBounds(x, y, width, height);
 
+    }
+    private void getPropStateRestorables(StateRestorable... restorables) {
+        for (StateRestorable restorable : restorables) {
+            restorable.getProp();
+        }
+    }
+    private void setPropStateRestorables(StateRestorable... restorables) {
+        for (StateRestorable restorable : restorables) {
+            restorable.saveProp();
+        }
     }
 }
