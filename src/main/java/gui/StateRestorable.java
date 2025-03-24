@@ -7,9 +7,9 @@ public interface StateRestorable {
     /**
      * сохранение состояния окна
      */
-    void saveState();
+    void saveProp();
     /**
      * получение состояния окна для восстановления
      */
-    void getState();
+    void getProp();
 }

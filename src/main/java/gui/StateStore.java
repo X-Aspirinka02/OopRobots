@@ -91,6 +91,11 @@ public class StateStore {
         defaultValues.put("log.x", "10");
         defaultValues.put("log.y", "10");
         defaultValues.put("log.isIcon", "false");
+        defaultValues.put("gen.width", "1550");
+        defaultValues.put("gen.height", "926");
+        defaultValues.put("gen.x", "-7");
+        defaultValues.put("gen.y", "-7");
+        defaultValues.put("gen.isIcon", "false");
 
 
         File propertiesFile = new File(filePath);

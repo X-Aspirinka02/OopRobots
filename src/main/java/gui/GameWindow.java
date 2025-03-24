@@ -6,14 +6,13 @@ import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyVetoException;
-import java.util.AbstractMap;
+import java.util.HashMap;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
-import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 
 /**
  * игровое окно
@@ -66,15 +65,15 @@ public class GameWindow extends JInternalFrame implements StateRestorable
     /**
      * сохранить текущее состояние окна
      */
-    public void saveState() {
+    public void saveProp() {
         mapState.addToStore();
     }
     /**
      * получить и установить предыдущее состояние окна
      */
-    public void getState() {
+    public void getProp() {
 
-        AbstractMap<String, String> mapStartState = mapState.takeFromStore();
+        HashMap<String, String> mapStartState = mapState.takeFromStore();
 
         try {
             this.setIcon(Boolean.parseBoolean(mapStartState.get("isIcon")));

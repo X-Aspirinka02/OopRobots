@@ -18,12 +18,10 @@ import log.LogEntry;
 import log.LogWindowSource;
 import log.Logger;
 
-import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 /**
  * окно для логов
  */
-public class LogWindow extends JInternalFrame implements LogChangeListener, StateRestorable
-{
+public class LogWindow extends JInternalFrame implements LogChangeListener, StateRestorable {
     private LogWindowSource m_logSource;
     private TextArea m_logContent;
     /**
@@ -31,19 +29,18 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
      */
     private final PrefixFilteredMap mapState = new PrefixFilteredMap("log");
 
-    public LogWindow(LogWindowSource logSource) 
-    {
+    public LogWindow(LogWindowSource logSource) {
         super("Протокол работы", true, true, true, true);
         m_logSource = logSource;
         m_logSource.registerListener(this);
         m_logContent = new TextArea("");
         m_logContent.setSize(200, 500);
-        
+
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(m_logContent, BorderLayout.CENTER);
         getContentPane().add(panel);
 
-        //слушатели для отслежтвания изменения параметров окна
+
         addInternalFrameListener(new InternalFrameAdapter() {
             @Override
             public void internalFrameIconified(InternalFrameEvent e) {
@@ -61,8 +58,9 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
             public void componentResized(ComponentEvent e) {
                 mapState.updateMapSize(getWidth(), getHeight());
             }
+
             @Override
-            public void componentMoved(ComponentEvent e){
+            public void componentMoved(ComponentEvent e) {
                 mapState.updateMapLocation(getX(), getY());
             }
         });
@@ -73,33 +71,34 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
         updateLogContent();
     }
 
-    private void updateLogContent()
-    {
+    /**
+     * обновление логов в окне
+     */
+    private void updateLogContent() {
         StringBuilder content = new StringBuilder();
-        for (LogEntry entry : m_logSource.all())
-        {
+        for (LogEntry entry : m_logSource.all()) {
             content.append(entry.getMessage()).append("\n");
         }
         m_logContent.setText(content.toString());
         m_logContent.invalidate();
     }
-    
+
     @Override
-    public void onLogChanged()
-    {
+    public void onLogChanged() {
         EventQueue.invokeLater(this::updateLogContent);
     }
 
     /**
      * сохранить текущее состояние окна
      */
-    public void saveState() {
+    public void saveProp() {
         mapState.addToStore();
     }
+
     /**
      * получить и установить предыдущее состояние окна
      */
-    public void getState() {
+    public void getProp() {
 
         AbstractMap<String, String> mapStartState = mapState.takeFromStore();
 

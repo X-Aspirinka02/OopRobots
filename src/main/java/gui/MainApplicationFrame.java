@@ -1,10 +1,8 @@
 package gui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.HashMap;
 
 import javax.swing.*;
 
@@ -15,11 +13,16 @@ import log.Logger;
  * 1. Метод создания меню перегружен функционалом и трудно читается.
  * Следует разделить его на серию более простых методов (или вообще выделить отдельный класс).
  */
-public class MainApplicationFrame extends JFrame {
+public class MainApplicationFrame extends JFrame implements StateRestorable {
     /**
      * что-то типо имитации рабочего стола (панелька)
      */
     private final JDesktopPane desktopPane = new JDesktopPane();
+    /**
+     * мапа для сохранения состояния
+     */
+    private final PrefixFilteredMap gen = new PrefixFilteredMap("gen");
+
 
     /**
      * Создаёт главное окно (в том числе игровое окно и для логов)
@@ -34,21 +37,16 @@ public class MainApplicationFrame extends JFrame {
                 screenSize.height - inset * 2);
 
         setContentPane(desktopPane);
-
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
         addWindow(logWindow);
         GameWindow gameWindow = new GameWindow();
         addWindow(gameWindow);
+        gameWindow.getProp();
+        logWindow.getProp();
 
-
-        for (JInternalFrame frame : desktopPane.getAllFrames()) {
-            if (frame instanceof StateRestorable) {
-                ((StateRestorable) frame).getState();
-            }
-        }
 
         //устанавливает меню
-        setJMenuBar(generateMenuBar());
+        setJMenuBar(new Menu(this).getMenu());
 
 
         this.addWindowListener(new WindowAdapter() {
@@ -59,6 +57,30 @@ public class MainApplicationFrame extends JFrame {
             }
         });
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                gen.updateMapSize(getWidth(), getHeight());
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                gen.updateMapLocation(getX(), getY());
+            }
+        });
+        this.addPropertyChangeListener("state", evt -> {
+            if (evt.getNewValue().equals(JFrame.MAXIMIZED_BOTH)) {
+                gen.updateMapIcon(false);
+            } else if (evt.getNewValue().equals(JFrame.NORMAL)) {
+                Logger.debug("Окно восстановлено.");
+            } else if (evt.getNewValue().equals(JFrame.ICONIFIED)) {
+                gen.updateMapIcon(true);
+            }
+        });
+        this.pack();
+        getProp();
     }
 
 
@@ -103,113 +125,11 @@ public class MainApplicationFrame extends JFrame {
 //    }
 //    //до сюда
 
-    /**
-     * создаёт меню (полоса сверху)
-     *
-     * @return меню
-     */
-    private JMenuBar generateMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
-        JMenu lookAndFeelMenu = createlookAndFeelMenu();
-        JMenu testMenu = createTestMenu();
-        JMenuItem endMenu = createExitMenu();
-
-        menuBar.add(lookAndFeelMenu);
-        menuBar.add(testMenu);
-        menuBar.add(endMenu);
-        return menuBar;
-    }
-
-    /**
-     * создает подменю режимов отобрадения
-     *
-     * @return подменю режимов отобрадения
-     */
-    private JMenu createlookAndFeelMenu() {
-        JMenu lookAndFeelMenu = new JMenu("Режим отображения");
-        lookAndFeelMenu.setMnemonic(KeyEvent.VK_V);
-        lookAndFeelMenu.getAccessibleContext().setAccessibleDescription(
-                "Управление режимом отображения приложения");
-
-        {
-            JMenuItem systemLookAndFeel = new JMenuItem("Системная схема", KeyEvent.VK_S);
-            systemLookAndFeel.addActionListener((event) -> {
-                setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                this.invalidate();
-            });
-            lookAndFeelMenu.add(systemLookAndFeel);
-        }
-
-        {
-            JMenuItem crossplatformLookAndFeel = new JMenuItem("Универсальная схема", KeyEvent.VK_S);
-            crossplatformLookAndFeel.addActionListener((event) -> {
-                setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-                this.invalidate();
-            });
-            lookAndFeelMenu.add(crossplatformLookAndFeel);
-        }
-        return lookAndFeelMenu;
-    }
-
-    /**
-     * создаёт меню для тестов
-     *
-     * @return меню для тестов
-     */
-    private JMenu createTestMenu() {
-
-        JMenu testMenu = new JMenu("Тесты");
-        testMenu.setMnemonic(KeyEvent.VK_T);
-        testMenu.getAccessibleContext().setAccessibleDescription(
-                "Тестовые команды");
-
-        {
-            JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
-            addLogMessageItem.addActionListener((event) -> {
-                Logger.debug("Новая строка");
-            });
-            testMenu.add(addLogMessageItem);
-        }
-        return testMenu;
-    }
-
-    /**
-     * создаёт меню для выхода
-     *
-     * @return меню для выхода
-     */
-    private JMenuItem createExitMenu() {
-
-        JMenu exitMenu = new JMenu("Выход");
-        exitMenu.setMnemonic(KeyEvent.VK_T);
-        exitMenu.getAccessibleContext().setAccessibleDescription(
-                "Выход из приложения");
-        JMenuItem exitMenuItem = new JMenuItem("Выйти", KeyEvent.VK_X);
-        exitMenuItem.addActionListener((event) -> closingProcessing());
-
-
-        return exitMenu;
-    }
-
-    /**
-     * пока не знаю для чего
-     *
-     * @param className
-     */
-    private void setLookAndFeel(String className) {
-        try {
-            UIManager.setLookAndFeel(className);
-            SwingUtilities.updateComponentTreeUI(this);
-        } catch (ClassNotFoundException | InstantiationException
-                 | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            // just ignore
-        }
-    }
 
     /**
      * обрабатывает закрытие окна
      */
-    private void closingProcessing() {
+    public void closingProcessing() {
         {
 
             int result = JOptionPane.showConfirmDialog(
@@ -224,21 +144,50 @@ public class MainApplicationFrame extends JFrame {
 
                 for (JInternalFrame frame : desktopPane.getAllFrames()) {
                     if (frame instanceof StateRestorable) {
-                        ((StateRestorable) frame).saveState();
+                        ((StateRestorable) frame).saveProp();
                     }
+
                 }
+                this.saveProp();
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
                         new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 
 
-                    desktopPane.setVisible(false);
-                    dispose();
-                    System.exit(0);
+                desktopPane.setVisible(false);
+                dispose();
+                System.exit(0);
 
-                }
-                else{
-                    Logger.debug("Пользователь решил не выходить.");
-                }
+            } else {
+                Logger.debug("Пользователь решил не выходить.");
             }
         }
     }
+
+    public void saveProp() {
+        gen.addToStore();
+    }
+
+    public void getProp() {
+        HashMap<String, String> mapStartState = gen.takeFromStore();
+
+        int x = Integer.parseInt(mapStartState.get("x"));
+        int y = Integer.parseInt(mapStartState.get("y"));
+        int width = Integer.parseInt(mapStartState.get("width"));
+        int height = Integer.parseInt(mapStartState.get("height"));
+
+
+        if (mapStartState.get("isIcon").equals("true")) {
+            this.setExtendedState(JFrame.ICONIFIED);
+        } else if (mapStartState.get("isIcon").equals("false")) {
+            this.setExtendedState(JFrame.NORMAL);
+            this.setBounds(x, y, width, height);
+        } else {
+            this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+
+        }
+
+        this.setBounds(x, y, width, height);
+
+    }
+}
