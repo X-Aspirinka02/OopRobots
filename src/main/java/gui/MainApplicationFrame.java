@@ -22,7 +22,7 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
      * мапа для сохранения состояния
      */
     private final PrefixFilteredMap gen = new PrefixFilteredMap("gen");
-   private final GameWindow gameWindow = new GameWindow();
+    private final GameWindow gameWindow = new GameWindow();
     private final LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
 
     /**
@@ -33,9 +33,7 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
         //of the screen.
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(inset, inset,
-                screenSize.width - inset * 2,
-                screenSize.height - inset * 2);
+        setBounds(inset, inset, screenSize.width - inset * 2, screenSize.height - inset * 2);
 
         setContentPane(desktopPane);
         addWindow(logWindow);
@@ -129,19 +127,12 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
     public void closingProcessing() {
         {
 
-            int result = JOptionPane.showConfirmDialog(
-                    null,
-                    "Вы действительно хотите выйти из приложения?",
-                    "Подтверждение выхода",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.WARNING_MESSAGE
-            );
+            int result = JOptionPane.showConfirmDialog(null, "Вы действительно хотите выйти из приложения?", "Подтверждение выхода", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
             if (result == JOptionPane.YES_OPTION) {
 
-               setPropStateRestorables(this, gameWindow, logWindow);
-                Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(
-                        new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                setPropStateRestorables(this, gameWindow, logWindow);
+                Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 
 
                 desktopPane.setVisible(false);
@@ -153,11 +144,17 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
             }
         }
     }
-
+    /**
+     *  сохранение состояния главного окна
+     *
+     */
     public void saveProp() {
         gen.addToStore();
     }
-
+    /**
+     *  получение состояния главного окна
+     *
+     */
     public void getProp() {
         HashMap<String, String> mapStartState = gen.takeFromStore();
 
@@ -181,11 +178,20 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
         this.setBounds(x, y, width, height);
 
     }
+
+    /**
+     *  получение состояния всех окон
+     * @param restorables окна
+     */
     private void getPropStateRestorables(StateRestorable... restorables) {
         for (StateRestorable restorable : restorables) {
             restorable.getProp();
         }
     }
+    /**
+     *  сохранение состояния всех окон
+     * @param restorables окна
+     */
     private void setPropStateRestorables(StateRestorable... restorables) {
         for (StateRestorable restorable : restorables) {
             restorable.saveProp();
