@@ -100,6 +100,7 @@ public class Menu {
                 "Выход из приложения");
         JMenuItem exitMenuItem = new JMenuItem("Выйти", KeyEvent.VK_X);
         exitMenuItem.addActionListener((event) -> frame.closingProcessing());
+        exitMenu.add(exitMenuItem);
 
 
         return exitMenu;

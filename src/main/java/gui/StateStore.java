@@ -12,12 +12,14 @@ import java.util.Properties;
  * глобальный словарь для хранения состояния всех окон
  */
 public class StateStore {
-    private final String filePath = System.getProperty("user.home") + "\\r\\state.properties";
+    private final String filePath = System.getProperty("user.home") + File.separator + "r" + File.separator + "state.properties";
     private final Properties properties = new Properties();
+
     /**
      * сохраняет информацию окон в хранилище
+     *
      * @param windowMap состояние окна
-     * @param prefix  префикс,показывающий принадлежность данных к конкретному окну
+     * @param prefix    префикс,показывающий принадлежность данных к конкретному окну
      */
     public void setInfo(HashMap<String, String> windowMap, String prefix) {
         if (!Objects.equals(prefix, "")) {
@@ -31,7 +33,7 @@ public class StateStore {
         }
 
 
-        for (HashMap.Entry<String, String> entry: windowMap.entrySet()) {
+        for (HashMap.Entry<String, String> entry : windowMap.entrySet()) {
             properties.setProperty(entry.getKey(), entry.getValue());
         }
 
@@ -46,6 +48,7 @@ public class StateStore {
 
     /**
      * получает информацию окон из хранилища
+     *
      * @return мапа состояний для всех окон
      */
     public HashMap<String, String> getInfo() {
@@ -72,7 +75,7 @@ public class StateStore {
     /**
      * заполнение дефолтными состояниями, если это 1 запуск
      */
-    private void isFirstStart(){
+    private void isFirstStart() {
 
         File directory = new File(System.getProperty("user.home") + "\\r");
         if (!directory.exists()) {
@@ -104,5 +107,5 @@ public class StateStore {
             setInfo(defaultValues, "");
         }
     }
-    }
+}
 
