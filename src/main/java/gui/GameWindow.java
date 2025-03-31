@@ -19,17 +19,15 @@ import javax.swing.event.InternalFrameEvent;
  */
 public class GameWindow extends JInternalFrame implements StateRestorable
 {
-    private final GameVisualizer m_visualizer;
     /**
      * мапа для сохранения состояния окна
      */
     private final PrefixFilteredMap mapState = new PrefixFilteredMap("game");
-    public GameWindow() 
+    public GameWindow(GameMoved model)
     {
 
         super("Игровое поле", true, true, true, true);
-
-        m_visualizer = new GameVisualizer();
+        GameVisualizer m_visualizer = new GameVisualizer(model);
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(m_visualizer, BorderLayout.CENTER);
 

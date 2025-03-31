@@ -99,6 +99,11 @@ public class StateStore {
         defaultValues.put("gen.x", "-7");
         defaultValues.put("gen.y", "-7");
         defaultValues.put("gen.isIcon", "false");
+        defaultValues.put("coor.width", "214");
+        defaultValues.put("coor.height", "90");
+        defaultValues.put("coor.x", "234");
+        defaultValues.put("coor.y", "32");
+        defaultValues.put("coor.isIcon", "false");
 
 
         File propertiesFile = new File(filePath);

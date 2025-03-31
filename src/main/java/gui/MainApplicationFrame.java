@@ -21,8 +21,10 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
     /**
      * мапа для сохранения состояния
      */
+    private final GameMoved model = new GameMoved();
     private final PrefixFilteredMap gen = new PrefixFilteredMap("gen");
-    private final GameWindow gameWindow = new GameWindow();
+    private final CoordinatesWindow coordinatesWindow = new CoordinatesWindow(model);
+    private final GameWindow gameWindow = new GameWindow(model);
     private final LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
 
     /**
@@ -31,6 +33,7 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
     public MainApplicationFrame() {
         //Make the big window be indented 50 pixels from each edge
         //of the screen.
+
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset, screenSize.width - inset * 2, screenSize.height - inset * 2);
@@ -38,9 +41,10 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
         setContentPane(desktopPane);
         addWindow(logWindow);
         addWindow(gameWindow);
+        addWindow(coordinatesWindow);
 
 
-        //устанавливает меню
+
         setJMenuBar(new Menu(this).getMenu());
 
 
@@ -75,7 +79,7 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
             }
         });
         this.pack();
-        getPropStateRestorables(this, logWindow, gameWindow);
+        getPropStateRestorables(this, logWindow, gameWindow, coordinatesWindow);
     }
 
 
@@ -131,7 +135,7 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
 
             if (result == JOptionPane.YES_OPTION) {
 
-                setPropStateRestorables(this, gameWindow, logWindow);
+                setPropStateRestorables(this, gameWindow, logWindow, coordinatesWindow);
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 
 
