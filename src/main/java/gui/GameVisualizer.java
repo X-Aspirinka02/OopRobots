@@ -21,6 +21,7 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
 
     /**
      * инициализирует таймер для переодической перерисовки
+     *
      * @return таймер
      */
     private static Timer initTimer() {
@@ -30,6 +31,7 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
 
     /**
      * определяем
+     *
      * @param model модель для подсчета изменений координат
      */
     public GameVisualizer(GameMoved model) {
@@ -61,8 +63,9 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
 
     /**
      * слушатель для изменения состояния модели
+     *
      * @param evt A PropertyChangeEvent object describing the event source
-     *          and the property that has changed.
+     *            and the property that has changed.
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -70,12 +73,14 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
             repaint();
         }
     }
+
     /**
      * Запускает перерисовку компонента в потоке событий (EventQueue).
      */
     protected void onRedrawEvent() {
         EventQueue.invokeLater(this::repaint);
     }
+
     /**
      * Округляет значение до ближайшего целого числа.
      *
@@ -89,6 +94,7 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
     /**
      * Переопределенный метод для отрисовки компонента.
      * Вызывает методы {@link #drawRobot} и {@link #drawTarget} для отрисовки робота и цели.
+     *
      * @param g Графический контекст, используемый для отрисовки.
      */
     @Override
@@ -98,26 +104,28 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
         drawRobot(g2d, model.getRobotDirection());
         drawTarget(g2d, model.getTargetPositionX(), model.getTargetPositionY());
     }
+
     /**
      * Рисует закрашенный овал с центром в указанных координатах.
      *
-     * @param g        Графический контекст.
-     * @param centerX  Координата X центра овала.
-     * @param centerY  Координата Y центра овала.
-     * @param diam1    Ширина овала.
-     * @param diam2    Высота овала.
+     * @param g       Графический контекст.
+     * @param centerX Координата X центра овала.
+     * @param centerY Координата Y центра овала.
+     * @param diam1   Ширина овала.
+     * @param diam2   Высота овала.
      */
     private static void fillOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
         g.fillOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
     }
+
     /**
      * Рисует контур овала с центром в указанных координатах.
      *
-     * @param g        Графический контекст.
-     * @param centerX  Координата X центра овала.
-     * @param centerY  Координата Y центра овала.
-     * @param diam1    Ширина овала.
-     * @param diam2    Высота овала.
+     * @param g       Графический контекст.
+     * @param centerX Координата X центра овала.
+     * @param centerY Координата Y центра овала.
+     * @param diam1   Ширина овала.
+     * @param diam2   Высота овала.
      */
     private static void drawOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
         g.drawOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);

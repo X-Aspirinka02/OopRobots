@@ -22,6 +22,7 @@ public class PrefixFilteredMap {
 
     /**
      * создание
+     *
      * @param prefix принадлежность данных к конкретному окну
      */
     public PrefixFilteredMap(String prefix) {
@@ -41,20 +42,22 @@ public class PrefixFilteredMap {
         windowMap.put("height", Integer.toString(height));
 
     }
+
     /**
      * обновление данных при изменении состояния окна (положение)
      *
-     * @param x      абцисса верхнего левого угла окна
-     * @param y      ордината верхнего левого угла окна
+     * @param x абцисса верхнего левого угла окна
+     * @param y ордината верхнего левого угла окна
      */
     public void updateMapLocation(int x, int y) {
         windowMap.put("x", Integer.toString(x));
         windowMap.put("y", Integer.toString(y));
 
     }
+
     /**
      * обновление данных при изменении состояния окна (свернутое состояние)
-
+     *
      * @param isIcon определитель того, что окно является свернутым
      */
     public void updateMapIcon(boolean isIcon) {
@@ -68,7 +71,7 @@ public class PrefixFilteredMap {
      */
     public void addToStore() {
         HashMap<String, String> windowMapI = new HashMap<>(windowMap);
-        for (HashMap.Entry<String, String> entry: windowMapI.entrySet()) {
+        for (HashMap.Entry<String, String> entry : windowMapI.entrySet()) {
             String key = prefix + '.' + entry.getKey();
             windowMap.put(key, entry.getValue());
             windowMap.remove(entry.getKey());
@@ -79,17 +82,18 @@ public class PrefixFilteredMap {
 
     /**
      * взять данные состояния из хранилища
+     *
      * @return новое состояние окна
      */
-     public HashMap<String, String> takeFromStore() {
-            HashMap<String, String> windowMapI = storage.getInfo();
-         for (HashMap.Entry<String, String> entry: windowMapI.entrySet()) {
-             if (entry.getKey().split("\\.")[0].equals(prefix)) {
-                 String key = entry.getKey().split("\\.")[1];
-                 windowMap.put(key, entry.getValue());
-             }
-         }
-         return windowMap;
+    public HashMap<String, String> takeFromStore() {
+        HashMap<String, String> windowMapI = storage.getInfo();
+        for (HashMap.Entry<String, String> entry : windowMapI.entrySet()) {
+            if (entry.getKey().split("\\.")[0].equals(prefix)) {
+                String key = entry.getKey().split("\\.")[1];
+                windowMap.put(key, entry.getValue());
+            }
+        }
+        return windowMap;
     }
 
 }

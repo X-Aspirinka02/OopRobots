@@ -49,6 +49,7 @@ public class GameMoved {
 
     /**
      * метод для добавления слушателя
+     *
      * @param listener слушатель изменения модели
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -71,6 +72,7 @@ public class GameMoved {
 
     /**
      * Установка позиции цели с уведомлением слушателей
+     *
      * @param p точка с новыми координатами
      */
     public void setTargetPosition(Point p) {
@@ -123,6 +125,7 @@ public class GameMoved {
         moveRobot(velocity, angularVelocity, 10);
         fireRobotPositionChanged();
     }
+
     /**
      * Вычисляет угол между текущей позицией робота и позицией цели.
      *
@@ -138,6 +141,7 @@ public class GameMoved {
 
         return asNormalizedRadians(Math.atan2(diffY, diffX));
     }
+
     /**
      * Нормализует угол в радианах, приводя его к диапазону [0, 2π).
      *
@@ -153,6 +157,7 @@ public class GameMoved {
         }
         return angle;
     }
+
     /**
      * Ограничивает значение заданными минимальным и максимальным пределами.
      *
@@ -218,7 +223,12 @@ public class GameMoved {
         m_robotDirection = newDirection;
     }
 
-
+    /**
+     * Округляет значение до ближайшего целого числа.
+     *
+     * @param value Значение для округления.
+     * @return Округленное целое число.
+     */
     private static int round(double value) {
         return (int) (value + 0.5);
     }

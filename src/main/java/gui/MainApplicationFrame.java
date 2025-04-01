@@ -44,7 +44,6 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
         addWindow(coordinatesWindow);
 
 
-
         setJMenuBar(new Menu(this).getMenu());
 
 
@@ -148,16 +147,16 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
             }
         }
     }
+
     /**
-     *  сохранение состояния главного окна
-     *
+     * сохранение состояния главного окна
      */
     public void saveProp() {
         gen.addToStore();
     }
+
     /**
-     *  получение состояния главного окна
-     *
+     * получение состояния главного окна
      */
     public void getProp() {
         HashMap<String, String> mapStartState = gen.takeFromStore();
@@ -184,7 +183,8 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
     }
 
     /**
-     *  получение состояния всех окон
+     * получение состояния всех окон
+     *
      * @param restorables окна
      */
     private void getPropStateRestorables(StateRestorable... restorables) {
@@ -192,8 +192,10 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
             restorable.getProp();
         }
     }
+
     /**
-     *  сохранение состояния всех окон
+     * сохранение состояния всех окон
+     *
      * @param restorables окна
      */
     private void setPropStateRestorables(StateRestorable... restorables) {

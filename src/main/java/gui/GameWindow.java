@@ -17,14 +17,13 @@ import javax.swing.event.InternalFrameEvent;
 /**
  * игровое окно
  */
-public class GameWindow extends JInternalFrame implements StateRestorable
-{
+public class GameWindow extends JInternalFrame implements StateRestorable {
     /**
      * мапа для сохранения состояния окна
      */
     private final PrefixFilteredMap mapState = new PrefixFilteredMap("game");
-    public GameWindow(GameMoved model)
-    {
+
+    public GameWindow(GameMoved model) {
 
         super("Игровое поле", true, true, true, true);
         GameVisualizer m_visualizer = new GameVisualizer(model);
@@ -36,10 +35,11 @@ public class GameWindow extends JInternalFrame implements StateRestorable
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                mapState.updateMapSize( getWidth(), getHeight());
+                mapState.updateMapSize(getWidth(), getHeight());
             }
+
             @Override
-            public void componentMoved(ComponentEvent e){
+            public void componentMoved(ComponentEvent e) {
                 mapState.updateMapLocation(getX(), getY());
             }
         });
@@ -66,6 +66,7 @@ public class GameWindow extends JInternalFrame implements StateRestorable
     public void saveProp() {
         mapState.addToStore();
     }
+
     /**
      * получить и установить предыдущее состояние окна
      */

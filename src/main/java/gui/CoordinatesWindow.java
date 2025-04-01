@@ -29,10 +29,10 @@ public class CoordinatesWindow extends JInternalFrame implements StateRestorable
      * текстовые поля в окне
      */
     private final JLabel robotCoordinatesLabel = new JLabel("Робот: (0, 0)");
-    private final JLabel targetCoordinatesLabel = new JLabel("Точка: (0, 0)");
 
     /**
      * создаём окно
+     *
      * @param model модель для вычисления координат
      */
     public CoordinatesWindow(GameMoved model) {
@@ -54,10 +54,11 @@ public class CoordinatesWindow extends JInternalFrame implements StateRestorable
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                mapState.updateMapSize( getWidth(), getHeight());
+                mapState.updateMapSize(getWidth(), getHeight());
             }
+
             @Override
-            public void componentMoved(ComponentEvent e){
+            public void componentMoved(ComponentEvent e) {
                 mapState.updateMapLocation(getX(), getY());
             }
         });
@@ -74,19 +75,20 @@ public class CoordinatesWindow extends JInternalFrame implements StateRestorable
             }
         });
         panel.add(robotCoordinatesLabel);
-        panel.add(targetCoordinatesLabel);
 
         this.add(panel);
         pack();
 
 
     }
+
     /**
      * сохранить текущее состояние окна
      */
     public void saveProp() {
         mapState.addToStore();
     }
+
     /**
      * получить и установить предыдущее состояние окна
      */
@@ -113,8 +115,9 @@ public class CoordinatesWindow extends JInternalFrame implements StateRestorable
 
     /**
      * переписываем координаты при их изменении
+     *
      * @param evt Объект PropertyChangeEvent, описывающий источник события
-     * * и свойство, которое изменилось.
+     *            * и свойство, которое изменилось.
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -122,10 +125,6 @@ public class CoordinatesWindow extends JInternalFrame implements StateRestorable
 
             Point robotPosition = (Point) evt.getNewValue();
             robotCoordinatesLabel.setText("Робот: (" + robotPosition.x + ", " + robotPosition.y + ")");
-        } else if ("targetPosition".equals(evt.getPropertyName())) {
-
-            Point targetPosition = (Point) evt.getNewValue();
-            targetCoordinatesLabel.setText("Точка: (" + targetPosition.x + ", " + targetPosition.y + ")");
         }
     }
 
