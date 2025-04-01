@@ -8,15 +8,37 @@ import java.beans.PropertyChangeSupport;
  * модель для вычисления координат
  */
 public class GameMoved {
+    /**
+     * координата робота X
+     */
     private volatile double m_robotPositionX = 100;
+    /**
+     * координата робота Y
+     */
     private volatile double m_robotPositionY = 100;
+    /**
+     * направление робота
+     */
     private volatile double m_robotDirection = 0;
-
+    /**
+     * координата Цели X
+     */
     private volatile int m_targetPositionX = 150;
+    /**
+     * координата Цели Y
+     */
     private volatile int m_targetPositionY = 100;
-
+    /**
+     * скорость робота
+     */
     private static final double maxVelocity = 0.1;
+    /**
+     * угловая скорость робота
+     */
     private static final double maxAngularVelocity = 0.001;
+    /**
+     * слепая зона движения робота (там, где он ходит плохо)
+     */
     private static final double radius_blind = maxVelocity / maxAngularVelocity;
     /**
      * Объект, используемый для управления слушателями изменений свойств.
