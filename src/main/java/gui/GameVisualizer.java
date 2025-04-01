@@ -18,6 +18,7 @@ import javax.swing.JPanel;
  */
 public class GameVisualizer extends JPanel implements PropertyChangeListener {
     private final GameMoved model;
+    private final ControllerRobot controller;
 
     /**
      * инициализирует таймер для переодической перерисовки
@@ -36,6 +37,7 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
      */
     public GameVisualizer(GameMoved model) {
         this.model = model;
+        controller = new ControllerRobot(model);
         model.addPropertyChangeListener(this);
         Timer m_timer = initTimer();
         m_timer.schedule(new TimerTask() {
@@ -47,14 +49,13 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
         m_timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                model.onModelUpdateEvent();
+                controller.updateModel();
             }
         }, 0, 10);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                model.setTargetPosition(e.getPoint());
-                repaint();
+                controller.setChangesModel(e.getPoint());
             }
         });
 
