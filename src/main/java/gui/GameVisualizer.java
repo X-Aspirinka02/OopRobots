@@ -93,9 +93,7 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
 
     /**
      * Переопределенный метод для отрисовки компонента.
-     * Вызывает методы {@link #drawRobot} и {@link #drawTarget} для отрисовки робота и цели.
      *
-     * @param g Графический контекст, используемый для отрисовки.
      */
     @Override
     public void paint(Graphics g) {
@@ -107,12 +105,6 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
 
     /**
      * Рисует закрашенный овал с центром в указанных координатах.
-     *
-     * @param g       Графический контекст.
-     * @param centerX Координата X центра овала.
-     * @param centerY Координата Y центра овала.
-     * @param diam1   Ширина овала.
-     * @param diam2   Высота овала.
      */
     private static void fillOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
         g.fillOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
@@ -120,12 +112,6 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
 
     /**
      * Рисует контур овала с центром в указанных координатах.
-     *
-     * @param g       Графический контекст.
-     * @param centerX Координата X центра овала.
-     * @param centerY Координата Y центра овала.
-     * @param diam1   Ширина овала.
-     * @param diam2   Высота овала.
      */
     private static void drawOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {
         g.drawOval(centerX - diam1 / 2, centerY - diam2 / 2, diam1, diam2);
@@ -133,9 +119,6 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
 
     /**
      * Отрисовывает робота на экране.
-     *
-     * @param g         Графический контекст.
-     * @param direction Направление робота в радианах.
      */
     private void drawRobot(Graphics2D g, double direction) {
         int robotCenterX = round(model.getRobotPositionX());

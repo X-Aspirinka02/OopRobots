@@ -12,7 +12,7 @@ import java.util.Properties;
  * глобальный словарь для хранения состояния всех окон
  */
 public class StateStore {
-    private final String filePath = System.getProperty("user.home") + File.separator + "r" + File.separator + "state.properties";
+    private final String filePath = System.getProperty("user.home") + File.separator + "rushkova" + File.separator + "state.properties";
     private final Properties properties = new Properties();
 
     /**
@@ -77,7 +77,7 @@ public class StateStore {
      */
     private void isFirstStart() {
 
-        File directory = new File(System.getProperty("user.home") + "\\r");
+        File directory = new File(System.getProperty("user.home") + "\\rushkova");
         if (!directory.exists()) {
             directory.mkdirs();
         }
