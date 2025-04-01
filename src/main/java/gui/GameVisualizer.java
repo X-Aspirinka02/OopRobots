@@ -8,9 +8,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.beans.PropertyChangeListener;
-import java.util.Timer;
+
 import java.beans.PropertyChangeEvent;
-import java.util.TimerTask;
+
 import javax.swing.JPanel;
 
 /**
@@ -19,15 +19,6 @@ import javax.swing.JPanel;
 public class GameVisualizer extends JPanel implements PropertyChangeListener {
     private final GameMoved model;
     private final ControllerRobot controller;
-
-    /**
-     * инициализирует таймер для переодической перерисовки
-     *
-     * @return таймер
-     */
-    private static Timer initTimer() {
-        return new Timer("events generator", true);
-    }
 
 
     /**
@@ -39,19 +30,6 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
         this.model = model;
         controller = new ControllerRobot(model);
         model.addPropertyChangeListener(this);
-        Timer m_timer = initTimer();
-        m_timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                onRedrawEvent();
-            }
-        }, 0, 50);
-        m_timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                controller.updateModel();
-            }
-        }, 0, 10);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -75,12 +53,6 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
         }
     }
 
-    /**
-     * Запускает перерисовку компонента в потоке событий (EventQueue).
-     */
-    protected void onRedrawEvent() {
-        EventQueue.invokeLater(this::repaint);
-    }
 
     /**
      * Округляет значение до ближайшего целого числа.
