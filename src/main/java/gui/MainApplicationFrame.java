@@ -7,6 +7,12 @@ import java.util.HashMap;
 import javax.swing.*;
 
 import log.Logger;
+import robot.RobotModel;
+import state.PrefixFilteredMap;
+import state.StateRestorable;
+import window.CoordinatesWindow;
+import window.GameWindow;
+import window.LogWindow;
 
 /**
  * Что требуется сделать:
@@ -21,7 +27,7 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
     /**
      * мапа для сохранения состояния
      */
-    private final GameMoved model = new GameMoved();
+    private final RobotModel model = new RobotModel();
     private final PrefixFilteredMap gen = new PrefixFilteredMap("gen");
     private final CoordinatesWindow coordinatesWindow = new CoordinatesWindow(model);
     private final GameWindow gameWindow = new GameWindow(model);

@@ -1,4 +1,4 @@
-package gui;
+package robot;
 
 import java.awt.*;
 import java.beans.PropertyChangeListener;
@@ -7,7 +7,7 @@ import java.beans.PropertyChangeSupport;
 /**
  * модель для вычисления координат
  */
-public class GameMoved {
+public class RobotModel {
     /**
      * координата робота X
      */

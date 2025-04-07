@@ -1,6 +1,10 @@
-package gui;
+package window;
 
+import gui.GameVisualizer;
 import log.Logger;
+import robot.RobotModel;
+import state.PrefixFilteredMap;
+import state.StateRestorable;
 
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
@@ -23,7 +27,7 @@ public class GameWindow extends JInternalFrame implements StateRestorable {
      */
     private final PrefixFilteredMap mapState = new PrefixFilteredMap("game");
 
-    public GameWindow(GameMoved model) {
+    public GameWindow(RobotModel model) {
 
         super("Игровое поле", true, true, true, true);
         GameVisualizer m_visualizer = new GameVisualizer(model);

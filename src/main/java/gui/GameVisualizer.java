@@ -1,7 +1,10 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.EventQueue;
+
+import robot.ControllerRobot;
+import robot.RobotModel;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
@@ -17,7 +20,7 @@ import javax.swing.JPanel;
  * отвечает за рисование робота и цели
  */
 public class GameVisualizer extends JPanel implements PropertyChangeListener {
-    private final GameMoved model;
+    private final RobotModel model;
     private final ControllerRobot controller;
 
 
@@ -26,7 +29,7 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
      *
      * @param model модель для подсчета изменений координат
      */
-    public GameVisualizer(GameMoved model) {
+    public GameVisualizer(RobotModel model) {
         this.model = model;
         controller = new ControllerRobot(model);
         model.addPropertyChangeListener(this);

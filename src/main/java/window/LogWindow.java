@@ -1,4 +1,4 @@
-package gui;
+package window;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -17,6 +17,8 @@ import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
 import log.Logger;
+import state.PrefixFilteredMap;
+import state.StateRestorable;
 
 /**
  * окно для логов

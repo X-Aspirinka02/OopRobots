@@ -1,6 +1,9 @@
-package gui;
+package window;
 
 import log.Logger;
+import robot.RobotModel;
+import state.PrefixFilteredMap;
+import state.StateRestorable;
 
 import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
@@ -20,7 +23,7 @@ public class CoordinatesWindow extends JInternalFrame implements StateRestorable
     /**
      * модель для вычисления координат
      */
-    private final GameMoved model;
+    private final RobotModel model;
     /**
      * мапа для сохранения состояния окна
      */
@@ -35,7 +38,7 @@ public class CoordinatesWindow extends JInternalFrame implements StateRestorable
      *
      * @param model модель для вычисления координат
      */
-    public CoordinatesWindow(GameMoved model) {
+    public CoordinatesWindow(RobotModel model) {
         super("Координаты робота", true, true, true, true);
         this.model = model;
         model.addPropertyChangeListener(this);

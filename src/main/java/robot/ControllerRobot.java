@@ -1,4 +1,4 @@
-package gui;
+package robot;
 
 import java.awt.*;
 import java.util.Timer;
@@ -11,13 +11,13 @@ public class ControllerRobot {
     /**
      * модель робота
      */
-    private final GameMoved model;
+    private final RobotModel model;
 
     /**
      * конструктор
      * @param model модель для подсчета изменений координат
      */
-    ControllerRobot(GameMoved model){
+    public ControllerRobot(RobotModel model){
         this.model = model;
         Timer m_timer = initTimer();
         m_timer.schedule(new TimerTask() {
