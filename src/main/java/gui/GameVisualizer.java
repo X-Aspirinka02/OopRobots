@@ -20,7 +20,13 @@ import javax.swing.JPanel;
  * отвечает за рисование робота и цели
  */
 public class GameVisualizer extends JPanel implements PropertyChangeListener {
+    /**
+     * модель робота
+     */
     private final RobotModel model;
+    /**
+     * контроллер для модели
+     */
     private final ControllerRobot controller;
 
 
@@ -36,7 +42,7 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                controller.setChangesModel(e.getPoint());
+                controller.setChangesModel(e.getX(), e.getY());
             }
         });
 

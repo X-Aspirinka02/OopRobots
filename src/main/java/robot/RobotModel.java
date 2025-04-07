@@ -73,13 +73,12 @@ public class RobotModel {
     /**
      * Установка позиции цели с уведомлением слушателей
      *
-     * @param p точка с новыми координатами
      */
-    public void setTargetPosition(Point p) {
+    public void setTargetPosition(int newX, int newY) {
         int oldX = m_targetPositionX;
         int oldY = m_targetPositionY;
-        m_targetPositionX = p.x;
-        m_targetPositionY = p.y;
+        m_targetPositionX = newX;
+        m_targetPositionY = newY;
         if (oldX != m_targetPositionX || oldY != m_targetPositionY) {
             fireTargetPositionChanged();
         }

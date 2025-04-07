@@ -38,10 +38,9 @@ public class ControllerRobot {
 
     /**
      * передает модели информацию об изменениях
-     * @param point новая точка
      */
-    public void setChangesModel(Point point){
-        model.setTargetPosition(point);
+    public void setChangesModel(int x, int y){
+        model.setTargetPosition(x, y);
     }
 
 }
