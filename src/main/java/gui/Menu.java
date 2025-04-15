@@ -68,9 +68,12 @@ public class Menu {
                 "Тестовые команды");
 
         {
-            JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
-            addLogMessageItem.addActionListener((event) -> Logger.debug("Новая строка"));
-            testMenu.add(addLogMessageItem);
+            JMenuItem addLogMessageItem1 = new JMenuItem("Сообщение в лог 1", KeyEvent.VK_S);
+            addLogMessageItem1.addActionListener((event) -> Logger.debug("Новая строка 1"));
+            JMenuItem addLogMessageItem2 = new JMenuItem("Сообщение в лог 2", KeyEvent.VK_S);
+            addLogMessageItem2.addActionListener((event) -> Logger.debug("Новая строка 2"));
+            testMenu.add(addLogMessageItem1);
+            testMenu.add(addLogMessageItem2);
         }
         return testMenu;
     }

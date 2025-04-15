@@ -1,5 +1,8 @@
 package log;
 
+/**
+ * сообщение в лог
+ */
 public class LogEntry
 {
     private LogLevel m_logLevel;

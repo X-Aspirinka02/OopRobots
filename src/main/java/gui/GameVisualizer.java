@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Color;
 
+import log.Logger;
 import robot.ControllerRobot;
 import robot.RobotModel;
 
@@ -43,6 +44,7 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
             @Override
             public void mouseClicked(MouseEvent e) {
                 controller.setChangesModel(e.getX(), e.getY());
+                Logger.debug("Цель сдвинулась");
             }
         });
 
