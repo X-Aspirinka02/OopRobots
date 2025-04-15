@@ -24,8 +24,8 @@ public class LogList implements Iterable {
         }
     }
 
-    private AtomicReference<LogNode<LogEntry>> head;
-    private AtomicReference<LogNode<LogEntry>> tail;
+    private final AtomicReference<LogNode<LogEntry>> head;
+    private final AtomicReference<LogNode<LogEntry>> tail;
     private final int queueLength;
     private int currentSize = 0;
 
@@ -58,7 +58,7 @@ public class LogList implements Iterable {
                 }
             }
         }
-        if (currentSize >= queueLength) {
+        if (currentSize >= queueLength + 1) {
             while (true) {
                 LogNode<LogEntry> currentHead = head.get();
 
@@ -87,6 +87,7 @@ public class LogList implements Iterable {
         return new LogListIterator(this);
     }
 
+
     class LogListIterator implements Iterator<LogEntry> {
         LogNode<LogEntry> current;
 
@@ -109,6 +110,3 @@ public class LogList implements Iterable {
 
     }
 }
-
-
-

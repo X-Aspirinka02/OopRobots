@@ -1,7 +1,6 @@
 package log;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Objects;
