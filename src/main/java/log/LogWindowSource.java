@@ -1,9 +1,8 @@
 package log;
 
-import java.util.ArrayList;
-import java.lang.ref.WeakReference;
-import java.util.List;
-import java.util.Objects;
+
+import java.util.Collections;
+import java.util.WeakHashMap;
 
 /**
  * Что починить:
@@ -12,14 +11,11 @@ import java.util.Objects;
  * 2. Этот класс хранит активные сообщения лога, но в такой реализации он 
  * их лишь накапливает. Надо же, чтобы количество сообщений в логе было ограничено 
  * величиной m_iQueueLength (т.е. реально нужна очередь сообщений 
- * ограниченного размера) 
+ * ограниченного размера)
+ * СДЕЛАНО
  */
 public class LogWindowSource
 {
-    /**
-     * количество сообщений в логе
-     */
-    private final int m_iQueueLength;
     /**
      * сообщения
      */
@@ -27,14 +23,14 @@ public class LogWindowSource
     /**
      * слушатели
      */
-    private final ArrayList<WeakReference<LogChangeListener>> m_listeners;
+    private final WeakHashMap<String, LogChangeListener> m_listeners;
     private volatile LogChangeListener[] m_activeListeners;
     
     public LogWindowSource(int iQueueLength) 
     {
-        m_iQueueLength = iQueueLength;
+
         m_messages = new LogList(iQueueLength);
-        m_listeners = new ArrayList<>();
+        m_listeners = new WeakHashMap<>();
     }
 
     /**
@@ -45,7 +41,7 @@ public class LogWindowSource
     {
         synchronized(m_listeners)
         {
-            m_listeners.add(new WeakReference<>(listener));
+            m_listeners.put(listener.toString(), listener);
             m_activeListeners = null;
         }
     }
@@ -56,7 +52,7 @@ public class LogWindowSource
      */
     public void unregisterListener(LogChangeListener listener) {
         synchronized (m_listeners) {
-                m_listeners.removeIf(weekRef -> weekRef.get() == null || Objects.equals(weekRef.get(), listener));
+                m_listeners.remove(listener.toString());
                 m_activeListeners = null;
             }
     }
@@ -78,14 +74,8 @@ public class LogWindowSource
             synchronized (m_listeners) {
                 if (m_activeListeners == null) {
 
-                    List<LogChangeListener> listeners = new ArrayList<>();
-                    for (WeakReference<LogChangeListener> weakRef : m_listeners) {
-                        LogChangeListener listener = weakRef.get();
-                        if (listener != null) {
-                            listeners.add(listener);
-                        }
-                    }
-                    activeListeners = listeners.toArray(new LogChangeListener[0]);
+
+                    activeListeners = m_listeners.values().toArray(new LogChangeListener[0]);
                     m_activeListeners = activeListeners;
                 }
             }
@@ -112,15 +102,15 @@ public class LogWindowSource
      * @param count количество символов
      * @return подсписок сообщений лога
      */
-//    public Iterable<LogEntry> range(int startFrom, int count)
-//    {
-//        if (startFrom < 0 || startFrom >= m_messages.size())
-//        {
-//            return Collections.emptyList();
-//        }
-//        int indexTo = Math.min(startFrom + count, m_messages.size());
-//        return m_messages.subList(startFrom, indexTo);
-//    }
+    public Iterable<LogEntry> range(int startFrom, int count)
+    {
+        if (startFrom < 0 || startFrom >= size())
+        {
+            return Collections.emptyList();
+        }
+        int indexTo = Math.min(startFrom + count, size());
+        return m_messages.subList(startFrom, indexTo);
+    }
 
     /**
      * возвращает все сообщения в логе
