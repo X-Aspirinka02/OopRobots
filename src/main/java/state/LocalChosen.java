@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class LocalChosen implements StateRestorable {
-    private PrefixFilteredMap local = new PrefixFilteredMap("leng");
+    private final PrefixFilteredMap local = new PrefixFilteredMap("leng");
     private ResourceBundle resourceBundle;
     private Locale currentLocale;
     private final List<LanguageChangeListener> listeners = new ArrayList<>();
@@ -24,7 +24,9 @@ public class LocalChosen implements StateRestorable {
         this.currentLocale = newLocale;
         reloadBundle();
         local.updateMapLanguage(currentLocale.getLanguage());
-        notifyListeners();
+        for (LanguageChangeListener listener : listeners) {
+            listener.onLanguageChanged();
+        }
     }
 
     private void reloadBundle() {
@@ -32,12 +34,6 @@ public class LocalChosen implements StateRestorable {
                 "localization/language",
                 currentLocale
         );
-    }
-
-    private void notifyListeners() {
-        for (LanguageChangeListener listener : listeners) {
-            listener.onLanguageChanged();
-        }
     }
 
     public String localStr(String str) {

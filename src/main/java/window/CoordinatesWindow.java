@@ -25,6 +25,7 @@ public class CoordinatesWindow extends JInternalFrame implements StateRestorable
      * модель для вычисления координат
      */
     private final RobotModel model;
+    private final LocalChosen language;
     /**
      * мапа для сохранения состояния окна
      */
@@ -42,6 +43,7 @@ public class CoordinatesWindow extends JInternalFrame implements StateRestorable
     public CoordinatesWindow(RobotModel model, LocalChosen language) {
         super(language.localStr("coordinates_window"), true, true, true, true);
         this.model = model;
+        this.language = language;
         model.addPropertyChangeListener(this);
 
 
@@ -94,21 +96,17 @@ public class CoordinatesWindow extends JInternalFrame implements StateRestorable
         this.setTitle(language.localStr("coordinates_window"));
 
 
-        //updateRobotCoordinatesLabel(language);
+        updateRobotCoordinatesLabel(language);
     }
 
-//    /**
-//     * Обновляет текст метки с координатами робота
-//     * @param language объект для работы с локализацией
-//     */
-//    private void updateRobotCoordinatesLabel(LocalChosen language) {
-//
-//        String labelText = String.format("%s: (%d, %d)",
-//                language.localStr("robot_label"),
-//                model.getRobotPositionX(),
-//                model.getRobotPositionY());
-//        robotCoordinatesLabel.setText(labelText);
-//    }
+    /**
+     * Обновляет текст метки с координатами робота
+     * @param language объект для работы с локализацией
+     */
+    private void updateRobotCoordinatesLabel(LocalChosen language) {
+
+        robotCoordinatesLabel.setText(language.localStr("cor_robot")+":("+ Math.round(model.getRobotPositionX()) + ", " + Math.round(model.getRobotPositionY())+")");
+    }
 
     /**
      * сохранить текущее состояние окна
@@ -152,7 +150,7 @@ public class CoordinatesWindow extends JInternalFrame implements StateRestorable
         if ("robotPosition".equals(evt.getPropertyName())) {
 
             Point robotPosition = (Point) evt.getNewValue();
-            robotCoordinatesLabel.setText("Робот: (" + robotPosition.x + ", " + robotPosition.y + ")");
+            robotCoordinatesLabel.setText(language.localStr("cor_robot")+"(" + robotPosition.x + ", " + robotPosition.y + ")");
         }
     }
 

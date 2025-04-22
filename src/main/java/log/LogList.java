@@ -77,9 +77,10 @@ public class LogList implements Iterable<LogEntry> {
      * получение итератора массива
      * @return  итератор
      */
-    public Iterator<LogEntry> iterator() {
+    public synchronized Iterator<LogEntry> iterator() {
         return new Iterator<>() {
             final ArrayDeque<LogEntry> copyListeners = messages.clone();
+
             private final Iterator<LogEntry> iterator = copyListeners.iterator();
 
             @Override

@@ -12,7 +12,7 @@ import java.util.Properties;
  * глобальный словарь для хранения состояния всех окон
  */
 public class StateStore {
-    private final String filePath = System.getProperty("user.home") + File.separator + "rushkova" + File.separator + "state.properties";
+    private final String filePath = System.getProperty("user.home") + File.separator + "rushcova" + File.separator + "state.properties";
     private final Properties properties = new Properties();
 
     /**
@@ -77,7 +77,7 @@ public class StateStore {
      */
     private void isFirstStart() {
 
-        File directory = new File(System.getProperty("user.home") + "\\rushkova");
+        File directory = new File(System.getProperty("user.home") + "\\rushcova");
         if (!directory.exists()) {
             directory.mkdirs();
         }
@@ -104,6 +104,7 @@ public class StateStore {
         defaultValues.put("coor.x", "234");
         defaultValues.put("coor.y", "32");
         defaultValues.put("coor.isIcon", "false");
+        defaultValues.put("leng.language", "ru");
 
 
         File propertiesFile = new File(filePath);
