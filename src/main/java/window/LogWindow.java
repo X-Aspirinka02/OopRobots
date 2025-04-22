@@ -17,6 +17,7 @@ import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
 import log.Logger;
+import state.LocalChosen;
 import state.PrefixFilteredMap;
 import state.StateRestorable;
 
@@ -31,8 +32,8 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
      */
     private final PrefixFilteredMap mapState = new PrefixFilteredMap("log");
 
-    public LogWindow(LogWindowSource logSource) {
-        super("Протокол работы", true, true, true, true);
+    public LogWindow(LogWindowSource logSource, LocalChosen language) {
+        super(language.localStr("log_window"), true, true, true, true);
         m_logSource = logSource;
         m_logSource.registerListener(this);
         m_logContent = new TextArea("");
@@ -120,5 +121,16 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
         this.setBounds(x, y, width, height);
 
 
+    }
+    /**
+     * Обновляет локализованные тексты в окне
+     * @param language объект для работы с локализацией
+     */
+    public void updateLocalization(LocalChosen language) {
+
+        this.setTitle(language.localStr("log_window"));
+
+
+        //updateRobotCoordinatesLabel(language);
     }
 }

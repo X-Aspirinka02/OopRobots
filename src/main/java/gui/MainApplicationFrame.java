@@ -8,7 +8,9 @@ import javax.swing.*;
 
 import log.Logger;
 import robot.RobotModel;
+import state.LanguageChangeListener;
 import state.PrefixFilteredMap;
+import state.LocalChosen;
 import state.StateRestorable;
 import window.CoordinatesWindow;
 import window.GameWindow;
@@ -19,7 +21,7 @@ import window.LogWindow;
  * 1. Метод создания меню перегружен функционалом и трудно читается.
  * Следует разделить его на серию более простых методов (или вообще выделить отдельный класс).
  */
-public class MainApplicationFrame extends JFrame implements StateRestorable {
+public class MainApplicationFrame extends JFrame implements StateRestorable, LanguageChangeListener {
     /**
      * что-то типо имитации рабочего стола (панелька)
      */
@@ -29,9 +31,10 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
      */
     private final RobotModel model = new RobotModel();
     private final PrefixFilteredMap gen = new PrefixFilteredMap("gen");
-    private final CoordinatesWindow coordinatesWindow = new CoordinatesWindow(model);
-    private final GameWindow gameWindow = new GameWindow(model);
-    private final LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
+    private final LocalChosen language = new LocalChosen();
+    private final CoordinatesWindow coordinatesWindow = new CoordinatesWindow(model, language);
+    private final GameWindow gameWindow = new GameWindow(model, language);
+    private final LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(), language);
 
     /**
      * Создаёт главное окно (в том числе игровое окно и для логов)
@@ -50,7 +53,11 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
         addWindow(coordinatesWindow);
 
 
-        setJMenuBar(new Menu(this).getMenu());
+        setJMenuBar(new Menu(this, language).getMenu());
+
+        language.addLanguageChangeListener(this);
+
+
 
 
         this.addWindowListener(new WindowAdapter() {
@@ -84,7 +91,8 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
             }
         });
         this.pack();
-        getPropStateRestorables(this, logWindow, gameWindow, coordinatesWindow);
+        getPropStateRestorables(this, logWindow, gameWindow, coordinatesWindow, language);
+        onLanguageChanged();
     }
 
 
@@ -97,6 +105,24 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
         desktopPane.add(frame);
         frame.setVisible(true);
     }
+    public void onLanguageChanged() {
+
+        setTitle(language.localStr("main_window_title"));
+
+
+        setJMenuBar(new Menu(this, language).getMenu());
+
+
+          logWindow.updateLocalization(language);
+          coordinatesWindow.updateLocalization(language);
+          gameWindow.updateLocalization(language);
+
+
+        revalidate();
+        repaint();
+    }
+
+
 
 //    //было закомментированно (не используется)
 //    protected JMenuBar createMenuBar() {
@@ -136,11 +162,11 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
     public void closingProcessing() {
         {
 
-            int result = JOptionPane.showConfirmDialog(null, "Вы действительно хотите выйти из приложения?", "Подтверждение выхода", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(null, language.localStr("menu_ex_conf"), language.localStr("menu_ex_ph"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
             if (result == JOptionPane.YES_OPTION) {
 
-                setPropStateRestorables(this, gameWindow, logWindow, coordinatesWindow);
+                setPropStateRestorables(this, gameWindow, logWindow, coordinatesWindow, language);
                 Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 
 
@@ -149,7 +175,7 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
                 System.exit(0);
 
             } else {
-                Logger.debug("Пользователь решил не выходить.");
+                Logger.debug(language.localStr("menu_log_exit"));
             }
         }
     }
@@ -209,4 +235,5 @@ public class MainApplicationFrame extends JFrame implements StateRestorable {
             restorable.saveProp();
         }
     }
+
 }

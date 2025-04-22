@@ -2,6 +2,7 @@ package window;
 
 import log.Logger;
 import robot.RobotModel;
+import state.LocalChosen;
 import state.PrefixFilteredMap;
 import state.StateRestorable;
 
@@ -38,8 +39,8 @@ public class CoordinatesWindow extends JInternalFrame implements StateRestorable
      *
      * @param model модель для вычисления координат
      */
-    public CoordinatesWindow(RobotModel model) {
-        super("Координаты робота", true, true, true, true);
+    public CoordinatesWindow(RobotModel model, LocalChosen language) {
+        super(language.localStr("coordinates_window"), true, true, true, true);
         this.model = model;
         model.addPropertyChangeListener(this);
 
@@ -84,6 +85,30 @@ public class CoordinatesWindow extends JInternalFrame implements StateRestorable
 
 
     }
+    /**
+     * Обновляет локализованные тексты в окне
+     * @param language объект для работы с локализацией
+     */
+    public void updateLocalization(LocalChosen language) {
+
+        this.setTitle(language.localStr("coordinates_window"));
+
+
+        //updateRobotCoordinatesLabel(language);
+    }
+
+//    /**
+//     * Обновляет текст метки с координатами робота
+//     * @param language объект для работы с локализацией
+//     */
+//    private void updateRobotCoordinatesLabel(LocalChosen language) {
+//
+//        String labelText = String.format("%s: (%d, %d)",
+//                language.localStr("robot_label"),
+//                model.getRobotPositionX(),
+//                model.getRobotPositionY());
+//        robotCoordinatesLabel.setText(labelText);
+//    }
 
     /**
      * сохранить текущее состояние окна

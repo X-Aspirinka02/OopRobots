@@ -65,6 +65,9 @@ public class PrefixFilteredMap {
         windowMap.put("isIcon", Boolean.toString(isIcon));
 
     }
+    public void updateMapLanguage(String language){
+        windowMap.put("language", language);
+    }
 
     /**
      * добавить состояние окна в хранилище

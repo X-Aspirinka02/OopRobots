@@ -3,6 +3,7 @@ package window;
 import gui.GameVisualizer;
 import log.Logger;
 import robot.RobotModel;
+import state.LocalChosen;
 import state.PrefixFilteredMap;
 import state.StateRestorable;
 
@@ -26,12 +27,14 @@ public class GameWindow extends JInternalFrame implements StateRestorable {
      * мапа для сохранения состояния окна
      */
     private final PrefixFilteredMap mapState = new PrefixFilteredMap("game");
+    private final GameVisualizer m_visualizer;
+    JPanel panel;
 
-    public GameWindow(RobotModel model) {
+    public GameWindow(RobotModel model, LocalChosen language) {
 
-        super("Игровое поле", true, true, true, true);
-        GameVisualizer m_visualizer = new GameVisualizer(model);
-        JPanel panel = new JPanel(new BorderLayout());
+        super(language.localStr("game_window"), true, true, true, true);
+         m_visualizer = new GameVisualizer(model);
+         panel = new JPanel(new BorderLayout());
         panel.add(m_visualizer, BorderLayout.CENTER);
 
 
@@ -95,4 +98,16 @@ public class GameWindow extends JInternalFrame implements StateRestorable {
 
 
     }
+    /**
+     * Обновляет локализованные тексты в окне
+     * @param language объект для работы с локализацией
+     */
+    public void updateLocalization(LocalChosen language) {
+
+        this.setTitle(language.localStr("game_window"));
+        m_visualizer.repaint();
+        panel.repaint();
+
+    }
+
 }
