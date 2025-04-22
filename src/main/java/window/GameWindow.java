@@ -33,7 +33,7 @@ public class GameWindow extends JInternalFrame implements StateRestorable {
     public GameWindow(RobotModel model, LocalChosen language) {
 
         super(language.localStr("game_window"), true, true, true, true);
-         m_visualizer = new GameVisualizer(model);
+         m_visualizer = new GameVisualizer(model, language);
          panel = new JPanel(new BorderLayout());
         panel.add(m_visualizer, BorderLayout.CENTER);
 
