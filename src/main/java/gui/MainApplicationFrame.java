@@ -10,7 +10,7 @@ import log.Logger;
 import robot.RobotModel;
 import state.LanguageChangeListener;
 import state.PrefixFilteredMap;
-import state.LocalChosen;
+import state.LocalizationState;
 import state.StateRestorable;
 import window.CoordinatesWindow;
 import window.GameWindow;
@@ -20,6 +20,7 @@ import window.LogWindow;
  * Что требуется сделать:
  * 1. Метод создания меню перегружен функционалом и трудно читается.
  * Следует разделить его на серию более простых методов (или вообще выделить отдельный класс).
+ * СДЕЛАНО
  */
 public class MainApplicationFrame extends JFrame implements StateRestorable, LanguageChangeListener {
     /**
@@ -31,7 +32,7 @@ public class MainApplicationFrame extends JFrame implements StateRestorable, Lan
      */
     private final RobotModel model = new RobotModel();
     private final PrefixFilteredMap gen = new PrefixFilteredMap("gen");
-    private final LocalChosen language = new LocalChosen();
+    private final LocalizationState language = new LocalizationState();
     private final CoordinatesWindow coordinatesWindow = new CoordinatesWindow(model, language);
     private final GameWindow gameWindow = new GameWindow(model, language);
     private final LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(), language);
@@ -55,7 +56,7 @@ public class MainApplicationFrame extends JFrame implements StateRestorable, Lan
 
         setJMenuBar(new Menu(this, language).getMenu());
 
-        language.addLanguageChangeListener(this);
+        language.registerLanguageChangeListener(this);
 
 
 
@@ -105,7 +106,12 @@ public class MainApplicationFrame extends JFrame implements StateRestorable, Lan
         desktopPane.add(frame);
         frame.setVisible(true);
     }
+
+    /**
+     * меняет локализацию
+     */
     public void onLanguageChanged() {
+
 
         setTitle(language.localStr("main_window_title"));
 
@@ -162,6 +168,8 @@ public class MainApplicationFrame extends JFrame implements StateRestorable, Lan
     public void closingProcessing() {
         {
 
+            UIManager.put("OptionPane.yesButtonText", language.localStr("menu_ex_yes"));
+            UIManager.put("OptionPane.noButtonText", language.localStr("menu_ex_no"));
             int result = JOptionPane.showConfirmDialog(null, language.localStr("menu_ex_conf"), language.localStr("menu_ex_ph"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
             if (result == JOptionPane.YES_OPTION) {

@@ -5,7 +5,7 @@ import java.awt.Color;
 import log.Logger;
 import robot.ControllerRobot;
 import robot.RobotModel;
-import state.LocalChosen;
+import state.LocalizationState;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -37,7 +37,7 @@ public class GameVisualizer extends JPanel implements PropertyChangeListener {
      *
      * @param model модель для подсчета изменений координат
      */
-    public GameVisualizer(RobotModel model, LocalChosen local) {
+    public GameVisualizer(RobotModel model, LocalizationState local) {
 
         this.model = model;
         controller = new ControllerRobot(model);

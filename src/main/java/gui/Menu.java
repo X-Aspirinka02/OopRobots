@@ -1,7 +1,7 @@
 package gui;
 
 import log.Logger;
-import state.LocalChosen;
+import state.LocalizationState;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -12,9 +12,9 @@ import java.util.Locale;
  */
 public class Menu {
     private final JMenuBar menuBar = new JMenuBar();
-    private final LocalChosen language;
+    private final LocalizationState language;
 
-    public Menu(MainApplicationFrame frame, LocalChosen language) {
+    public Menu(MainApplicationFrame frame, LocalizationState language) {
         this.language = language;
         JMenu lookAndFeelMenu = createlookAndFeelMenu(frame);
         JMenu testMenu = createTestMenu();

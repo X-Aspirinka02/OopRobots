@@ -17,7 +17,7 @@ import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
 import log.Logger;
-import state.LocalChosen;
+import state.LocalizationState;
 import state.PrefixFilteredMap;
 import state.StateRestorable;
 
@@ -25,14 +25,14 @@ import state.StateRestorable;
  * окно для логов
  */
 public class LogWindow extends JInternalFrame implements LogChangeListener, StateRestorable {
-    private LogWindowSource m_logSource;
-    private TextArea m_logContent;
+    private final LogWindowSource m_logSource;
+    private final TextArea m_logContent;
     /**
      * мапа для сохранения состояния окна
      */
     private final PrefixFilteredMap mapState = new PrefixFilteredMap("log");
 
-    public LogWindow(LogWindowSource logSource, LocalChosen language) {
+    public LogWindow(LogWindowSource logSource, LocalizationState language) {
         super(language.localStr("log_window"), true, true, true, true);
         m_logSource = logSource;
         m_logSource.registerListener(this);
@@ -70,7 +70,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
 
         pack();
 
-        Logger.debug("Протокол работает");
+        Logger.debug(language.localStr("protocol_work"));
         updateLogContent();
     }
 
@@ -126,7 +126,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
      * Обновляет локализованные тексты в окне
      * @param language объект для работы с локализацией
      */
-    public void updateLocalization(LocalChosen language) {
+    public void updateLocalization(LocalizationState language) {
 
         this.setTitle(language.localStr("log_window"));
 
