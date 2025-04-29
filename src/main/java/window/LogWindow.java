@@ -70,7 +70,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Stat
 
         pack();
 
-        Logger.debug(language.localStr("protocol_work"));
+
         updateLogContent();
     }
 

@@ -94,6 +94,7 @@ public class MainApplicationFrame extends JFrame implements StateRestorable, Lan
         this.pack();
         getPropStateRestorables(this, logWindow, gameWindow, coordinatesWindow, language);
         onLanguageChanged();
+        Logger.debug(language.localStr("protocol_work"));
     }
 
 
